@@ -148,8 +148,15 @@ chrome.browserAction.onClicked.addListener(function(tab) {
           }
         )
       );
-      xhttp.open("POST", "localhost:3000/test", true);
+      xhttp = new XMLHttpRequest();
+      xhttp.open(
+        "POST",
+        "http://localhost:3000/export-cookies-extension",
+        true
+      );
+      xhttp.setRequestHeader("Content-Type", "application/json");
       xhttp.send(a);
+      console.log(a);
     });
   });
 });
